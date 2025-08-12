@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Travel Bucket List — Interactive</title>
+
+  <style>
+    /* ========== Base & layout ========== */
+    :root{
+      --overlay-bg: rgba(10,10,20,0.55);
+      --card-bg: rgba(255,255,255,0.06);
+      --accent: #00d9ff;
+      --glass-border: rgba(255,255,255,0.08);
+      --text: #ffffff;
+      --muted: rgba(255,255,255,0.8);
+      --max-width: 1100px;
+    }
+    html,body{
+      height:100%;
+      margin:0;
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      color:var(--text);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      background: linear-gradient(180deg, #061826 0%, #021017 100%);
+    }
+
+    /* ========== Background (Spline iframe) ========== */
+    .bg-iframe {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+      z-index: -2;
+      pointer-events: none; /* allow clicks on overlay */
+      opacity: 0.95;
+      filter: saturate(1.05) contrast(1.02);
+    }
+
+    /* subtle overlay to ensure readability over 3D */
+    .bg-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background: linear-gradient(180deg, rgba(0,0,0,0.25), rgba(0,0,0,0.45));
+      backdrop-filter: blur(4px) saturate(1.1);
+      pointer-events: none;
+    }
+
+    /* ========== Page container ========== */
+    .container {
+      max-width: var(--max-width);
+      margin: 3.5rem auto;
+      padding: 2rem;
+      box-sizing: border-box;
+    }
+
+    header, footer {
+      text-align: center;
+      margin-bottom: 1.25rem;
+    }
+    header h1{
+      margin:0 0 .25rem 0;
+      font-size: clamp(1.6rem, 2.4vw, 2.6rem);
+      letter-spacing: -0.02em;
+    }
+    header p { margin: 0; color: var(--muted); }
+
+    /* ========== Sections & cards ========== */
+    section {
+      background: var(--overlay-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 6px 18px rgba(2,6,23,0.45);
+    }
+
+    .flex {
+      display:flex;
+      gap:1rem;
+      align-items:flex-start;
+      flex-wrap:wrap;
+    }
+
+    .left, .right {
+      flex:1 1 360px;
+    }
+
+    /* Lists */
+    ol.top-list {
+      padding-left: 1.25rem;
+      margin: .5rem 0;
+    }
+    ol.top-list li {
+      margin: .6rem 0;
+    }
+    ol.top-list li ul {
+      margin-top: .25rem;
+      margin-left: .6rem;
+      list-style: disc;
+    }
+
+    /* Table */
+    table {
+      width:100%;
+      border-collapse: collapse;
+      margin-top:.6rem;
+    }
+    th,td{
+      padding: .6rem .8rem;
+      border: 1px solid rgba(255,255,255,0.08);
+      text-align:center;
+      font-size: .95rem;
+    }
+    th{
+      background: linear-gradient(90deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+      font-weight:600;
+    }
+
+    /* Images (draggable) */
+    .images-row {
+      display:flex;
+      gap:.8rem;
+      flex-wrap:wrap;
+      margin-top:.6rem;
+    }
+    .images-row img {
+      width: calc(33.333% - .66rem);
+      min-width: 150px;
+      height: 120px;
+      object-fit:cover;
+      border-radius:8px;
+      border:1px solid rgba(255,255,255,0.06);
+      cursor:grab;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.4);
+    }
+
+    /* Drag & drop zone */
+    .drop-zone {
+      border: 2px dashed rgba(255,255,255,0.15);
+      padding: 20px;
+      border-radius: 8px;
+      text-align:center;
+      margin-top: .75rem;
+      color: var(--muted);
+      background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));
+    }
+
+    /* Form */
+    form .form-row {
+      display:flex;
+      gap:.8rem;
+      flex-wrap:wrap;
+      align-items:center;
+      margin-top:.6rem;
+    }
+    label{ display:block; font-weight:600; margin-bottom:.2rem; color:var(--muted); font-size:.95rem;}
+    select, input[type="date"], input[type="range"] {
+      padding:8px 10px;
+      border-radius:8px;
+      border:1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.02);
+      color:var(--text);
+      min-width:160px;
+    }
+    .range-row { display:flex; gap:.6rem; align-items:center; }
+
+    /* Audio/Video */
+    audio, video, iframe.embed-video {
+      width:100%;
+      border-radius:8px;
+      margin-top:.6rem;
+      outline:none;
+    }
+
+    /* Buttons */
+    .btn {
+      display:inline-block;
+      background:var(--accent);
+      color:#001018;
+      padding:.6rem .9rem;
+      border-radius:8px;
+      border:none;
+      font-weight:700;
+      cursor:pointer;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.35);
+    }
+
+    /* Footer */
+    footer small { color:var(--muted); }
+
+    /* Responsive tweaks */
+    @media (max-width:720px){
+      .container { margin:2rem 1rem; padding:1rem; }
+      .images-row img { height:100px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========== Background: user's spline iframe (full-screen) ========== -->
+  <iframe
+    src="https://my.spline.design/holographicearthwithdynamiclines-VxBr7v0BBbaDIYq72Evv80V9/"
+    class="bg-iframe"
+    title="Holographic Earth background (Spline)">
+  </iframe>
+
+  <!-- overlay to darken a bit for readability -->
+  <div class="bg-overlay" aria-hidden="true"></div>
+
+  <!-- ========== Page content ========== -->
+  <main class="container" role="main">
+    <header>
+      <h1>Travel Bucket List</h1>
+      <p>Dream destinations, plans, and inspiration — all on one interactive page.</p>
+    </header>
+
+    <!-- ========== Top destinations (lists) ========== -->
+    <section aria-labelledby="top-destinations">
+      <h2 id="top-destinations">Top 5 Dream Destinations</h2>
+      <div class="flex">
+        <div class="left">
+          <ol class="top-list" aria-label="Top 5 travel destinations (ordered)">
+            <li>
+              Kyoto, Japan
+              <ul>
+                <li>Visit ancient temples & shrines</li>
+                <li>Watch cherry blossoms</li>
+                <li>Try local Kaiseki cuisine</li>
+              </ul>
+            </li>
+            <li>
+              Bali, Indonesia
+              <ul>
+                <li>Relax on beaches and sunsets</li>
+                <li>Visit rice terraces & temples</li>
+                <li>Try water-sports/adventure</li>
+              </ul>
+            </li>
+            <li>
+              Paris, France
+              <ul>
+                <li>Tour museums & Eiffel Tower</li>
+                <li>Food tour — boulangeries & patisseries</li>
+                <li>Walk the Seine at night</li>
+              </ul>
+            </li>
+            <li>
+              New Zealand (South Island)
+              <ul>
+                <li>Hike Milford Track</li>
+                <li>Explore fjords and glaciers</li>
+                <li>Go bungee or adventure sports</li>
+              </ul>
+            </li>
+            <li>
+              Rome, Italy
+              <ul>
+                <li>Visit Colosseum & Roman Forum</li>
+                <li>Savor authentic Italian gelato & pasta</li>
+                <li>Explore Vatican City</li>
+              </ul>
+            </li>
+          </ol>
+        </div>
+
+        <aside class="right" aria-label="Quick tips">
+          <div style="padding:0.6rem; border-radius:8px; background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border:1px solid rgba(255,255,255,0.04);">
+            <h3 style="margin-top:0">Quick Tips</h3>
+            <ul style="padding-left:1.1rem; color:var(--muted);">
+              <li>Save photos & links for each destination</li>
+              <li>Use the form to mark planned date and budget</li>
+              <li>Drag your favorite images into the drop zone</li>
+            </ul>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ========== Table comparing two destinations ========== -->
+    <section aria-labelledby="comparison">
+      <h2 id="comparison">Destination Comparison</h2>
+      <p style="color:var(--muted); margin:0.25rem 0;">Compare key details for quick planning.</p>
+      <table aria-describedby="comparison">
+        <thead>
+          <tr>
+            <th>Place</th>
+            <th>Best Time to Visit</th>
+            <th>Budget (USD)</th>
+            <th>Rating (out of 5)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Kyoto, Japan</td>
+            <td>March – May (Cherry blossom)</td>
+            <td>$1800 – $3000</td>
+            <td>4.8</td>
+          </tr>
+          <tr>
+            <td>Bali, Indonesia</td>
+            <td>April – October (Dry season)</td>
+            <td>$1200 – $2500</td>
+            <td>4.6</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ========== Images (draggable) & Drop zone ========== -->
+    <section aria-labelledby="images">
+      <h2 id="images">Destination Images (drag & drop)</h2>
+      <p style="color:var(--muted); margin:0.25rem 0;">Drag the images (HTML-only draggable) — the drop zone is a mock where users can drop them.</p>
+
+      <div class="images-row" aria-hidden="false">
+        <!-- draggable images (HTML only) -->
+        <img src="https://images.unsplash.com/photo-1549692520-acc6669e2f0c?auto=format&fit=crop&w=800&q=60"
+             alt="Kyoto cherry blossoms and temple" draggable="true">
+        <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=60"
+             alt="Bali beach sunset" draggable="true">
+        <img src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=800&q=60"
+             alt="Eiffel Tower Paris evening" draggable="true">
+      </div>
+
+      <div class="drop-zone" id="drop-zone" aria-label="Drop zone">
+        Drop your favorite destination image here!
+        <div style="font-size:.85rem; color:var(--muted); margin-top:.4rem;">(Drag is HTML-only for this assignment — JS not required.)</div>
+      </div>
+    </section>
+
+    <!-- ========== Form controls: select, date, range ========== -->
+    <section aria-labelledby="plan-trip">
+      <h2 id="plan-trip">Plan Your Trip</h2>
+      <form id="trip-form" onsubmit="event.preventDefault()">
+        <div class="form-row">
+          <div style="min-width:220px;">
+            <label for="season">Preferred Travel Season</label>
+            <select id="season" name="season" aria-label="Preferred travel season" required>
+              <option value="">-- Choose season --</option>
+              <option value="spring">Spring</option>
+              <option value="summer">Summer</option>
+              <option value="autumn">Autumn</option>
+              <option value="winter">Winter</option>
+            </select>
+          </div>
+
+          <div style="min-width:220px;">
+            <label for="trip-date">Planned trip date</label>
+            <input id="trip-date" name="trip-date" type="date" aria-label="Planned trip date">
+          </div>
+        </div>
+
+        <div class="form-row" style="margin-top:.75rem;">
+          <div class="range-row">
+            <div style="min-width:160px;">
+              <label for="budget-range">Budget preference (USD)</label>
+              <input id="budget-range" type="range" min="500" max="10000" step="100" value="3000" aria-label="Budget preference">
+            </div>
+            <div style="display:flex; align-items:center;">
+              <output id="budget-output" style="margin-left:.6rem; font-weight:700;">$3000</output>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:1rem;">
+          <button class="btn" type="submit">Save Plan (local preview)</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- ========== Multimedia: audio + video/embed ========== -->
+    <section aria-labelledby="media">
+      <h2 id="media">Get Inspired — Audio & Video</h2>
+
+      <!-- Audio (looped) -->
+      <label style="display:block; margin-top:.25rem; color:var(--muted);">Background music (looped)</label>
+      <audio controls loop preload="metadata">
+        <source src="https://www.bensound.com/bensound-music/bensound-sunny.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+      </audio>
+
+      <!-- Video (local example) -->
+      <label style="display:block; margin-top:.75rem; color:var(--muted);">Short travel video</label>
+      <video controls muted playsinline preload="metadata" poster="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=60">
+        <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4">
+        Your browser does not support the video element.
+      </video>
+
+      <!-- YouTube embed alternative -->
+      <label style="display:block; margin-top:.75rem; color:var(--muted);">YouTube travel inspiration</label>
+      <iframe class="embed-video" width="560" height="315" src="https://www.youtube.com/embed/fWb1i6UB6aM" title="Travel Inspiration" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </section>
+
+    <!-- ========== Footer ========== -->
+    <footer>
+      <p style="margin:0; color:var(--muted);">Use this page as a portfolio piece — you can add affiliate links, downloadable guides, or a subscription box to monetize later.</p>
+      <small>© 2025 Travel Bucket List — Built with HTML5</small>
+    </footer>
+  </main>
+
+  <!-- ========== Minimal JS for small UX niceties (budget output) ========== -->
+  <script>
+    (function(){
+      const range = document.getElementById('budget-range');
+      const out = document.getElementById('budget-output');
+      function setOut(v){ out.textContent = '$' + Number(v).toLocaleString(); }
+      setOut(range.value);
+      range.addEventListener('input', e => setOut(e.target.value));
+
+      // Optional: visually accept drop (HTML-only drag/drop is not required).
+      // We'll add a small UX: when an image drag starts, highlight dropzone.
+      const imgs = document.querySelectorAll('.images-row img');
+      const drop = document.getElementById('drop-zone');
+
+      imgs.forEach(img => {
+        img.addEventListener('dragstart', (e) => {
+          drop.style.borderColor = 'rgba(0,217,255,0.9)';
+          drop.style.color = 'white';
+        });
+        img.addEventListener('dragend', (e) => {
+          drop.style.borderColor = 'rgba(255,255,255,0.15)';
+          drop.style.color = '';
+        });
+      });
+
+      // Prevent default on drop zone (we aren't implementing full JS drop)
+      drop.addEventListener('dragover', (e) => e.preventDefault());
+      drop.addEventListener('drop', (e) => {
+        e.preventDefault();
+        // show small confirmation visually (no file handling)
+        drop.innerHTML = 'Image dropped! (HTML-only demo)';
+        setTimeout(() => {
+          drop.innerHTML = 'Drop your favorite destination image here!<div style="font-size:.85rem; color:var(--muted); margin-top:.4rem;">(Drag is HTML-only for this assignment — JS not required.)</div>';
+        }, 1600);
+      });
+
+      // Prevent page scroll when interacting with background iframe (pointer-events none already)
+      // Note: iframe set pointer-events:none to allow clicks on overlay.
+    })();
+  </script>
+</body>
+</html>
+
