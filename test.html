@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+  
+
+    <div class="glass-box">
+  <h2>Glass Effect</h2>
+  <p>This background is blurred, like frosted glass.</p>
+</div>
+
+<style>
+body {
+  background: url('https://picsum.photos/800/600') center/cover no-repeat;
+  height: 100vh;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.glass-box {
+  background: rgba(255, 255, 255, 0.2); /* semi-transparent white */
+  border-radius: 15px;
+  padding: 20px;
+  color: white;
+  width: 300px;
+  text-align: center;
+
+  /* Glass effect magic */
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+</style>
+
+
+</body>
+</html>

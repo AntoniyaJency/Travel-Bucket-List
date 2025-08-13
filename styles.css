@@ -1,0 +1,121 @@
+/* ===== Base & Theme ===== */
+    :root{
+      --canal:#0b3a5c;          /* deep canal blue */
+      --terracotta:#d97757;      /* warm venetian clay */
+      --ink:#0f172a;             /* slate‑900 */
+      --slate:#1e293b;           /* slate‑800 */
+      --text:#f8fafc;            /* slate‑50 */
+      --muted:#cbd5e1;           /* slate‑300 */
+      --ring:rgba(148,163,184,.35);
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Ubuntu,Cantarell,Noto Sans,Arial,sans-serif;color:var(--text);background:var(--ink)}
+
+    /* ===== Header (minimal, fixed) ===== */
+    header{
+      position:fixed; inset:0 auto auto 0; width:100%; z-index:40;
+      backdrop-filter: blur(10px);
+      background:linear-gradient(to right, rgba(2,6,23,.65), rgba(2,6,23,.35));
+      border-bottom:1px solid var(--ring);
+    }
+    .container{width:min(1100px,92vw);margin-inline:auto}
+    .nav{display:flex;gap:.8rem;align-items:center;justify-content:space-between;padding:.7rem 0}
+    .brand{display:flex;align-items:center;gap:.6rem;font-weight:700}
+    .dot{width:24px;height:24px;border-radius:50%;background:conic-gradient(from 150deg,#38bdf8,#6366f1,#22d3ee,#38bdf8);box-shadow:0 0 0 3px rgba(99,102,241,.25)}
+    nav a{color:#e2e8f0;text-decoration:none;padding:.35rem .6rem;border-radius:999px;border:1px solid transparent}
+    nav a:hover{border-color:var(--ring)}
+
+    /* ===== Hero with Spline (1st screen) ===== */
+    .hero{position:relative;height:105svh;overflow:hidden}
+    .hero iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+    /* .veil{position:absolute;inset:0;background:radial-gradient(900px 500px at 70% 15%,rgba(2,6,23,.15),rgba(2,6,23,.65)),linear-gradient(to bottom,rgba(2,6,23,.35),rgba(2,6,23,.7));} */
+    .hero-inner{position:relative;z-index:2;display:grid;place-items:center;height:100%}
+    .title{font-size:clamp(1.8rem,3.2vw+1rem,3.4rem);text-align:center;margin:0 1rem;text-shadow:0 2px 18px rgba(0,0,0,.4)}
+    .subtitle{opacity:.9;margin:.4rem auto 0;max-width:60ch;text-align:center}
+    .scroll-cue{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);font-size:.9rem;color:#e5e7eb;opacity:.9}
+    .chev{display:block;margin:.25rem auto 0;width:22px;height:22px;border-right:2px solid #e5e7eb;border-bottom:2px solid #e5e7eb;transform:rotate(45deg);animation:float 1.6s ease-in-out infinite}
+    @keyframes float{0%,100%{transform:translateX(-50%) rotate(45deg) translateY(0)}50%{transform:translateX(-50%) rotate(45deg) translateY(6px)}}
+
+    /* ===== Main that COVERS the hero afterwards ===== */
+    main{background:linear-gradient(180deg,var(--canal) 0%, var(--slate) 35%, #111827 100%); position:relative; z-index:1}
+    section.card{scroll-margin-top:64px; /* when jumping via nav */}
+
+    /* Opaque cards so the Spline is fully covered */
+    .stack{display:grid;gap:1.2rem;padding:2.2rem 0}
+    .card{
+      background:#0b1220; /* fully opaque */
+      border:1px solid var(--ring);
+      border-radius:20px; padding:1.2rem clamp(1rem,2vw,1.6rem);
+      box-shadow:0 10px 28px rgba(2,6,23,.45);
+      width:min(1100px,92vw); margin-inline:auto;
+    }
+    h2{font-size:1.35rem;margin:.2rem 0 .6rem}
+    h3{font-size:1.05rem;margin:1rem 0 .5rem;color:#c7d2fe}
+    .muted{color:var(--muted)}
+
+    /* Lists */
+    ol.top5{padding-left:1.2rem}
+    ol.top5>li{margin:.6rem 0}
+    ol.top5>li::marker{color:#93c5fd;font-weight:700}
+    ul.things{margin:.35rem 0 .3rem 1rem;color:#cbd5e1}
+
+    /* Table */
+    table{width:100%;border-collapse:collapse;border-radius:14px;overflow:hidden}
+    thead{background:linear-gradient(to right,rgba(99,102,241,.28),rgba(14,165,233,.28))}
+    th,td{padding:.85rem;text-align:left;border-bottom:1px dashed var(--ring)}
+    tbody tr:hover{background:rgba(148,163,184,.08)}
+
+    /* Gallery & Dropzone */
+    .gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem}
+    @media (max-width:900px){.gallery{grid-template-columns:1fr}}
+    .photo{position:relative;border-radius:16px;overflow:hidden;aspect-ratio:16/10;border:1px solid var(--ring)}
+    .photo img{width:100%;height:100%;object-fit:cover;display:block}
+    .tag{position:absolute;left:.6rem;bottom:.6rem;font-size:.85rem;background:#0b1220;padding:.25rem .55rem;border-radius:999px;border:1px solid var(--ring)}
+    .dropzone{border:2px dashed var(--ring);border-radius:16px;padding:1.2rem;text-align:center;min-height:120px;display:grid;place-items:center;color:#cbd5e1;background:#0b1220}
+
+    /* Form */
+    form{display:grid;gap:.9rem}
+    .field{display:grid;gap:.35rem}
+    label{font-size:.95rem}
+    select,input,textarea,button{background:#091324;color:#e5e7eb;border-radius:12px;border:1px solid var(--ring);padding:.7rem .9rem;font:inherit;outline:none}
+    input[type="range"]{padding:.4rem 0}
+    .actions{display:flex;gap:.6rem;flex-wrap:wrap}
+    .btn{cursor:pointer;border:1px solid rgba(99,102,241,.5);background:linear-gradient(to right,#4338ca,#0ea5e9);color:#fff;font-weight:600;box-shadow:0 8px 20px rgba(59,130,246,.35)}
+    .btn.secondary{border-color:var(--ring);background:#0b1220}
+
+    /* Media */
+    audio,video,iframe.media{width:100%;border-radius:16px;border:1px solid var(--ring)}
+
+    footer{text-align:center;padding:2rem 0 3rem;color:#a5b4fc}
+    footer small{color:#94a3b8}
+
+    /* Progressive enhancement: fade‑up on view (modern browsers) */
+    @supports (animation-timeline: view()){
+      .reveal{opacity:0;transform:translateY(14px);animation:reveal both linear;animation-timeline:view();animation-range:entry 10% cover 30%}
+      @keyframes reveal{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+    }
+
+    iframe.spline-bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+      z-index: 0;
+    }
+
+    .glass-box {
+  background: rgba(255, 255, 255, 0); /* semi-transparent white */
+  border-radius: 15px;
+  padding: 20px;
+  color: white;
+  width: 500px;
+  text-align: center;
+
+  /* Glass effect magic */
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
