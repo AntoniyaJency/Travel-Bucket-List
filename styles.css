@@ -119,3 +119,35 @@
 
   border: 1px solid rgba(255, 255, 255, 0.3);
 }
+
+.nav a {
+  text-decoration: none;  /* removes underline */
+  color: inherit;         /* inherits text color from parent */
+}
+
+.dropzone {
+    border: 3px dashed #888;
+    border-radius: 12px;
+    padding: 30px;
+    text-align: center;
+    font-family: Arial, sans-serif;
+    background-color: rgba(255,255,255,0.1);
+    color: #fff;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+  }
+
+  /* Visual feedback on hover (theoretical drop) */
+  .dropzone:hover {
+    background-color: rgba(0, 150, 255, 0.1);
+    border-color: #0af;
+  }
+
+  .dropzone p {
+    margin: 0;
+    font-size: 1.1em;
+  }
+
+  .dropzone .muted {
+    font-size: 0.9em;
+    color: #bbb;
+  }
