@@ -77,7 +77,6 @@
     /* Form */
     form{display:grid;gap:.9rem}
     .field{display:grid;gap:.35rem}
-
     label{font-size:.95rem}
     select,input,textarea,button{background:#091324;color:#e5e7eb;border-radius:12px;border:1px solid var(--ring);padding:.7rem .9rem;font:inherit;outline:none}
     input[type="range"]{padding:.4rem 0}
@@ -152,3 +151,46 @@
     font-size: 0.9em;
     color: #bbb;
   }
+
+
+ .hero {
+  position: relative;
+  height: 105svh;
+  overflow: hidden;
+}
+
+.hero iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  z-index: 0; /* behind gradient and content */
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%; /* cover full hero */
+  background: 
+    radial-gradient(circle at left center, rgba(39, 161, 170, 0.206), transparent 60%),
+    radial-gradient(circle at right center, rgba(39, 161, 170, 0.206), transparent 60%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+
+
+.hero-inner {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  height: 100%;
+  background: transparent; /* important */
+}
+
+
