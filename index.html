@@ -122,7 +122,7 @@
           </figure>
         </div>
         <div class="dropzone" aria-label="Drop zone (visual only)" style="font-size:.85rem; color:var(--muted); margin-top:.4rem;">
-          <p><strong>Drop your favorite Venice image here!</strong><br><span class="muted">HTML‑only demo — no JavaScript needed for this assignment.</span></p>
+          <p><strong>Drop your favorite Venice image here!</strong></p>
         </div>
       </section>
 
@@ -143,11 +143,31 @@
                 </select>
                 <p class="muted">Pick what vibes you prefer.</p>
               </div>
+
+                  
               <div class="field">
                 <label for="date">Planned Trip Date</label>
-                <input id="date" type="date" name="date" />
+                <input id="date" type="date" name="date">
                 <p class="muted">Choose a tentative start date.</p>
               </div>
+
+
+              <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+              <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+              <label for="date">Planned Trip Date</label>
+              <input id="date" type="date" name="date" class="field">
+              <p class="muted">Choose a tentative start date.</p>
+              <script>
+                flatpickr("#date", {
+                  dateFormat: "d/m/Y",
+                  defaultDate: "today"
+                });
+              </script> -->
+
+              
+
+              
               <div class="field">
                 <label for="budget">Budget Preference ($500 – $5000)</label>
                 <input id="budget" type="range" name="budget" min="500" max="5000" step="100" value="2000" oninput="budgetOut.value = '$' + this.value" />
@@ -189,7 +209,7 @@
       </section>
 
       <footer class="card" style="text-align:center">
-        <p>Made with ❤ for Venice explorers. <small class="muted">HTML5 • Accessible • Responsive • Aesthetic</small></p>
+        <p>Made with ❤ for Venice explorers. <small class="muted">@ Antoniya Jency</small></p>
       </footer>
     </div>
   </main>
