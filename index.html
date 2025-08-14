@@ -151,21 +151,21 @@
                 <p class="muted">Choose a tentative start date.</p>
               </div>
 
+              <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
-              <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+              <!-- Flatpickr JS -->
               <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
-              <label for="date">Planned Trip Date</label>
-              <input id="date" type="date" name="date" class="field">
-              <p class="muted">Choose a tentative start date.</p>
+              <!-- Init script -->
               <script>
                 flatpickr("#date", {
-                  dateFormat: "d/m/Y",
-                  defaultDate: "today"
+                  dateFormat: "Y-m-d",     // Output format
+                  defaultDate: "today",    // Start with today's date
+                  allowInput: true         // Allow manual typing
                 });
-              </script> -->
+              </script>
 
-              
+              <!-- Since the normal date won't work on all browsers -->
 
               
               <div class="field">
