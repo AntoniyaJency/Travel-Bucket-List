@@ -76,11 +76,7 @@
 
     /* Form */
     form{display:grid;gap:.9rem}
-    .field textarea {
-      width: 100%;          /* fit the container */
-      resize: vertical;     /* allow only vertical drag */
-      box-sizing: border-box; /* include padding/border in width */
-    }
+    .field{display:grid;gap:.35rem}
 
     label{font-size:.95rem}
     select,input,textarea,button{background:#091324;color:#e5e7eb;border-radius:12px;border:1px solid var(--ring);padding:.7rem .9rem;font:inherit;outline:none}
